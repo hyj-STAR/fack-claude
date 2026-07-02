@@ -14,6 +14,8 @@ npm run fix:preview
 npm run fix:write
 npm run dev
 npm run build:web
+npm run pack:mac
+npm run pack:win
 ```
 
 `fix --write` creates reviewable profile scripts under:
@@ -32,3 +34,4 @@ Nothing is added to shell startup files automatically.
 - [MVP Spec](./docs/MVP_SPEC.md)
 - [China Launch Checklist](./docs/CHINA_LAUNCH.md)
 - [7-Day Launch Sprint](./docs/LAUNCH_SPRINT.md)
+- [Distribution Plan](./docs/DISTRIBUTION.md)

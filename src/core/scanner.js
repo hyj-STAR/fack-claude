@@ -7,6 +7,10 @@ export const APP_DIR = join(homedir(), ".ai-workspace-doctor");
 export const PROFILE_DIR = join(APP_DIR, "profiles");
 export const PRODUCT_VERSION = "0.1.0";
 
+function resolveProfileDir(options = {}) {
+  return options.profileDir || PROFILE_DIR;
+}
+
 function hasCjk(value) {
   return /[\u3400-\u9fff\uf900-\ufaff]/u.test(String(value || ""));
 }
@@ -210,15 +214,16 @@ git config user.email "you@example.com"
 `;
 }
 
-export function previewFixes() {
+export function previewFixes(options = {}) {
+  const profileDir = resolveProfileDir(options);
   const files = [
-    { path: join(PROFILE_DIR, "ai-work-profile.sh"), content: shellProfile() },
-    { path: join(PROFILE_DIR, "ai-work-profile.ps1"), content: powershellProfile() },
-    { path: join(PROFILE_DIR, "git-privacy-template.sh"), content: gitTemplate() }
+    { path: join(profileDir, "ai-work-profile.sh"), content: shellProfile() },
+    { path: join(profileDir, "ai-work-profile.ps1"), content: powershellProfile() },
+    { path: join(profileDir, "git-privacy-template.sh"), content: gitTemplate() }
   ];
   return {
     mode: "dry-run",
-    directory: PROFILE_DIR,
+    directory: profileDir,
     files: files.map((file) => ({
       path: file.path,
       bytes: Buffer.byteLength(file.content, "utf8")
@@ -227,10 +232,11 @@ export function previewFixes() {
   };
 }
 
-export function writeFixes() {
-  mkdirSync(PROFILE_DIR, { recursive: true });
-  writeFileSync(join(PROFILE_DIR, "ai-work-profile.sh"), shellProfile(), "utf8");
-  writeFileSync(join(PROFILE_DIR, "ai-work-profile.ps1"), powershellProfile(), "utf8");
-  writeFileSync(join(PROFILE_DIR, "git-privacy-template.sh"), gitTemplate(), "utf8");
-  return { ...previewFixes(), mode: "write" };
+export function writeFixes(options = {}) {
+  const profileDir = resolveProfileDir(options);
+  mkdirSync(profileDir, { recursive: true });
+  writeFileSync(join(profileDir, "ai-work-profile.sh"), shellProfile(), "utf8");
+  writeFileSync(join(profileDir, "ai-work-profile.ps1"), powershellProfile(), "utf8");
+  writeFileSync(join(profileDir, "git-privacy-template.sh"), gitTemplate(), "utf8");
+  return { ...previewFixes({ profileDir }), mode: "write" };
 }

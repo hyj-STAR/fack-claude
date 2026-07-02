@@ -1,0 +1,48 @@
+appId: ai.voiceshell.aiworkspacedoctor
+productName: AI Workspace Doctor
+copyright: Copyright © 2026 VoiceShell
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - dist/**
+  - electron/**
+  - src/core/**
+  - package.json
+
+asar: true
+
+mac:
+  category: public.app-category.developer-tools
+  target:
+    - dmg
+    - zip
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.inherit.plist
+
+mas:
+  category: public.app-category.developer-tools
+  hardenedRuntime: false
+  entitlements: build/entitlements.mas.plist
+  entitlementsInherit: build/entitlements.mas.inherit.plist
+  provisioningProfile: build/embedded.provisionprofile
+
+dmg:
+  artifactName: "${productName}-${version}-${arch}.${ext}"
+
+win:
+  target:
+    - nsis
+    - zip
+  artifactName: "${productName}-${version}-${arch}.${ext}"
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true

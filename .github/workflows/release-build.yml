@@ -1,0 +1,61 @@
+name: Release Build
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  mac:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build unsigned macOS test package
+        run: CSC_IDENTITY_AUTO_DISCOVERY=false npm run pack:mac
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-workspace-doctor-macos
+          path: |
+            release/*.dmg
+            release/*-mac.zip
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build unsigned Windows test package
+        shell: bash
+        run: CSC_IDENTITY_AUTO_DISCOVERY=false npm run pack:win
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-workspace-doctor-windows
+          path: |
+            release/*.exe
+            release/*.zip

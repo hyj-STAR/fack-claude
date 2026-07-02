@@ -36,12 +36,12 @@ ipcMain.handle("doctor:scan", async (_event, options = {}) => {
 
 ipcMain.handle("doctor:preview-fixes", async () => {
   const api = await scanner();
-  return api.previewFixes();
+  return api.previewFixes({ profileDir: path.join(app.getPath("userData"), "profiles") });
 });
 
 ipcMain.handle("doctor:write-fixes", async () => {
   const api = await scanner();
-  return api.writeFixes();
+  return api.writeFixes({ profileDir: path.join(app.getPath("userData"), "profiles") });
 });
 
 app.whenReady().then(createWindow);
