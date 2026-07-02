@@ -17,6 +17,7 @@
     "pack:mac": "npm run build:web && electron-builder --mac dmg zip --publish never",
     "pack:mas": "npm run build:web && electron-builder --mac mas --publish never",
     "pack:win": "npm run build:web && electron-builder --win nsis zip --x64 --publish never",
+    "pack:win:zip": "npm run build:web && electron-builder --win zip --x64 --publish never",
     "pack:dir": "npm run build:web && electron-builder --dir --publish never",
     "scan": "node ./cli/doctor.js scan",
     "scan:json": "node ./cli/doctor.js scan --json",

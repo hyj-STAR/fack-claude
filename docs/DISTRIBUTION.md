@@ -85,6 +85,8 @@ For public launch, use a code signing certificate:
 
 Without signing, Windows builds are usable for internal testing but will trigger SmartScreen warnings.
 
+The GitHub release workflow currently builds Windows ZIP artifacts only. Build the NSIS installer locally with `npm run pack:win` or on a configured Windows signing runner.
+
 ## Build Outputs
 
 ```text
