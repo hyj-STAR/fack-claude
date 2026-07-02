@@ -31,3 +31,4 @@ Nothing is added to shell startup files automatically.
 - [PRD](./docs/PRD.md)
 - [MVP Spec](./docs/MVP_SPEC.md)
 - [China Launch Checklist](./docs/CHINA_LAUNCH.md)
+- [7-Day Launch Sprint](./docs/LAUNCH_SPRINT.md)
