@@ -35,3 +35,4 @@ Nothing is added to shell startup files automatically.
 - [China Launch Checklist](./docs/CHINA_LAUNCH.md)
 - [7-Day Launch Sprint](./docs/LAUNCH_SPRINT.md)
 - [Distribution Plan](./docs/DISTRIBUTION.md)
+- [App Store Connect Draft](./docs/APP_STORE_CONNECT.md)

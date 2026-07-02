@@ -12,6 +12,7 @@
     "dev": "node ./scripts/dev.mjs",
     "dev:web": "vite --host 127.0.0.1 --port 5178",
     "start": "electron .",
+    "assets:icons": "node ./scripts/generate-icons.mjs",
     "build:web": "vite build",
     "pack:mac": "npm run build:web && electron-builder --mac dmg zip --publish never",
     "pack:mas": "npm run build:web && electron-builder --mac mas --publish never",

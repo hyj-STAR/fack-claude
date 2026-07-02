@@ -54,6 +54,8 @@ Required Apple assets:
 - App Store Connect app record.
 - Screenshots, privacy answers, support URL, marketing URL, review notes.
 
+Submission copy is drafted in `docs/APP_STORE_CONNECT.md`.
+
 Important product constraints:
 
 - MAS builds use App Sandbox.
