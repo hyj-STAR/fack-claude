@@ -237,7 +237,7 @@ function App() {
           <span className="logo" aria-hidden="true">◎</span>
           <div>
             <p className="eyebrow">VoiceShell</p>
-            <h1>FACK CLAUDE</h1>
+            <h1>FACK</h1>
           </div>
         </div>
         <div className="actions">

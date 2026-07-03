@@ -17,7 +17,7 @@ function createWindow() {
     height: 760,
     minWidth: 900,
     minHeight: 620,
-    title: "FACK CLAUDE",
+    title: "FACK",
     backgroundColor: "#f5f7f4",
     webPreferences: {
       preload: path.join(__dirname, "preload.cjs"),
