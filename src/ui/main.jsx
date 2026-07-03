@@ -14,10 +14,27 @@ const fallbackReport = {
     timezone: "",
     shell: "",
     env: {},
-    privacy: {}
+    privacy: {},
+    targetProfile: {
+      language: "en-US",
+      timezone: "America/Los_Angeles",
+      locale: "en_US.UTF-8"
+    }
   },
   issues: []
 };
+
+const defaultIpChecklist = [
+  { title: "选择美国出口", detail: "使用你自己购买或授权的美国 VPS、企业 VPN、远程开发机或代理服务。目标国家选择 United States，城市优先 Los Angeles、San Jose、Seattle、New York 等稳定机房。" },
+  { title: "开启 TUN / System Proxy", detail: "在网络工具中打开 TUN、全局路由或系统代理，确保桌面应用、终端、WebSocket 和子进程都走同一出口。" },
+  { title: "验证 IPv4 / IPv6", detail: "点击“检测网络”，同时检查 IPv4 和 IPv6。只要 IPv6 仍显示 CN，就说明可能存在直连泄漏。" },
+  { title: "检查 DNS 一致性", detail: "使用随隧道转发的 DNS 或可信公共 DNS，避免 DNS 所在地区与 IP 出口不一致。" },
+  { title: "清理 CLI 残留", detail: "一键部署会清理 npm/git 里的旧 proxy，并安装 en_US.UTF-8 + America/Los_Angeles 的 shell profile。" },
+  { title: "处理系统级时区", detail: "macOS 系统时区需要管理员密码。需要全设备一致时，在终端运行：sudo systemsetup -settimezone America/Los_Angeles。" },
+  { title: "设备地区与语言", detail: "需要全设备一致时，将系统地区、首选语言、浏览器语言统一为 United States / English (US)。系统 UI 变更需要用户在系统设置中确认。" },
+  { title: "远程工作区方案", detail: "如果本机网络不可控，使用美国远程开发机或 VPS 作为稳定工作区，把代码、终端、浏览器都放在同一个远程环境。" },
+  { title: "账号与支付信息", detail: "账号、手机号、支付方式属于外部服务资料，本应用只做清单提醒，不自动代填或代改。用户应使用自己真实、合法、可验证的信息。" }
+];
 
 async function browserScan() {
   return {
@@ -64,6 +81,8 @@ function severityLabel(severity) {
 function App() {
   const [report, setReport] = useState(fallbackReport);
   const [repair, setRepair] = useState(null);
+  const [deployment, setDeployment] = useState(null);
+  const [deploymentPreview, setDeploymentPreview] = useState(null);
   const [busy, setBusy] = useState(false);
   const desktopApi = window.doctor;
 
@@ -91,6 +110,33 @@ function App() {
     }
   }
 
+  async function previewDeployment() {
+    setBusy(true);
+    try {
+      const result = desktopApi
+        ? await desktopApi.previewDeployment()
+        : { actions: ["Electron mode required."], adminRequired: [], ipOperationChecklist: [] };
+      setDeploymentPreview(result);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function applyDeployment() {
+    const ok = window.confirm("将备份并修改当前 shell 配置，清理 npm/git 旧 proxy，并安装美国 AI 工作 Profile。确认后会立即执行。");
+    if (!ok) return;
+    setBusy(true);
+    try {
+      const result = desktopApi
+        ? await desktopApi.applyDeployment()
+        : { actions: [], failures: ["Electron mode required."], ipOperationChecklist: [] };
+      setDeployment(result);
+      await rescan(true);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   useEffect(() => {
     rescan(false);
   }, []);
@@ -108,7 +154,7 @@ function App() {
         <div className="actions">
           <button onClick={() => rescan(false)} disabled={busy}>重新检测</button>
           <button onClick={() => rescan(true)} disabled={busy}>检测网络</button>
-          <button className="primary" onClick={generateProfile} disabled={busy}>生成修复 Profile</button>
+          <button className="primary" onClick={previewDeployment} disabled={busy}>预览一键部署</button>
         </div>
       </section>
 
@@ -131,8 +177,54 @@ function App() {
             <div><dt>语言</dt><dd>{report.facts.locale || "unknown"}</dd></div>
             <div><dt>时区</dt><dd>{report.facts.timezone || "unknown"}</dd></div>
             <div><dt>Shell</dt><dd>{report.facts.shell || "unknown"}</dd></div>
+            {report.facts.network?.ipDetails?.ok ? (
+              <>
+                <div><dt>IPv4</dt><dd>{report.facts.network.ipDetails.ipv4?.ip || report.facts.network.publicIp?.ipv4 || "unknown"}</dd></div>
+                <div><dt>IPv4出口</dt><dd>{report.facts.network.ipDetails.ipv4?.country || "unknown"} · {report.facts.network.ipDetails.ipv4?.city || report.facts.network.ipDetails.ipv4?.region || "unknown"}</dd></div>
+                <div><dt>IPv6</dt><dd>{report.facts.network.ipDetails.ipv6?.ip || report.facts.network.publicIp?.ipv6 || "unknown"}</dd></div>
+                <div><dt>IPv6出口</dt><dd>{report.facts.network.ipDetails.ipv6?.country || "unknown"} · {report.facts.network.ipDetails.ipv6?.city || report.facts.network.ipDetails.ipv6?.region || "unknown"}</dd></div>
+                <div><dt>组织</dt><dd>{report.facts.network.ipDetails.ipv4?.org || report.facts.network.ipDetails.ipv6?.org || "unknown"}</dd></div>
+              </>
+            ) : null}
           </dl>
         </div>
+      </section>
+
+      <section className="deployment-panel">
+        <div className="panel-head">
+          <div>
+            <p className="label">美国环境一键部署</p>
+            <h2>确认后一次完成可自动修改的项目</h2>
+          </div>
+          <button className="primary" onClick={applyDeployment} disabled={busy}>确认并一键部署</button>
+        </div>
+        <div className="deploy-grid">
+          <div>
+            <p className="muted">目标：{report.facts.targetProfile?.language || "en-US"} / {report.facts.targetProfile?.timezone || "America/Los_Angeles"} / {report.facts.targetProfile?.locale || "en_US.UTF-8"}</p>
+            <div className="step-list">
+              {(deploymentPreview?.actions || [
+                "写入 AI 工作 Profile",
+                "备份并接入 shell 启动文件",
+                "清理 npm/git 旧 proxy 残留",
+                "生成 rollback.sh 和部署报告"
+              ]).map((item, index) => <p key={index}><span>{index + 1}</span>{item}</p>)}
+            </div>
+          </div>
+          <div className="manual-box">
+            <h3>需要用户确认/管理员权限的项目</h3>
+            {(deploymentPreview?.adminRequired || [
+              "macOS 系统时区需要管理员密码",
+              "TUN/System Proxy 需要在你的网络工具中开启"
+            ]).map((item, index) => <p key={index}>{item}</p>)}
+          </div>
+        </div>
+        {deployment ? (
+          <div className="result-box">
+            <strong>部署完成：</strong>{deployment.actions.length} 个动作，{deployment.failures.length} 个失败。
+            <code>{deployment.profileDir}/deployment-report.json</code>
+            <code>{deployment.profileDir}/rollback.sh</code>
+          </div>
+        ) : null}
       </section>
 
       <section className="content-grid">
@@ -178,6 +270,25 @@ function App() {
           ) : (
             <button className="wide" onClick={generateProfile} disabled={busy}>生成可审阅配置</button>
           )}
+        </div>
+      </section>
+
+      <section className="ip-panel">
+        <div className="panel-head">
+          <div>
+            <p className="label">IP 操作台</p>
+            <h2>用户应该怎么设置</h2>
+          </div>
+          <button onClick={() => rescan(true)} disabled={busy}>重新检测 IP</button>
+        </div>
+        <div className="ip-grid">
+          {(deploymentPreview?.ipOperationChecklist || defaultIpChecklist).map((item, index) => (
+            <article key={index} className="ip-step">
+              <span>{index + 1}</span>
+              <h3>{item.title}</h3>
+              <p>{item.detail}</p>
+            </article>
+          ))}
         </div>
       </section>
     </main>

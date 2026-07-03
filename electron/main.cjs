@@ -44,6 +44,16 @@ ipcMain.handle("doctor:write-fixes", async () => {
   return api.writeFixes({ profileDir: path.join(app.getPath("userData"), "profiles") });
 });
 
+ipcMain.handle("doctor:preview-deployment", async () => {
+  const api = await scanner();
+  return api.previewDeployment({ profileDir: path.join(app.getPath("userData"), "profiles") });
+});
+
+ipcMain.handle("doctor:apply-deployment", async () => {
+  const api = await scanner();
+  return api.applyDeployment({ profileDir: path.join(app.getPath("userData"), "profiles") });
+});
+
 app.whenReady().then(createWindow);
 
 app.on("window-all-closed", () => {
