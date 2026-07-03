@@ -444,7 +444,13 @@ function App() {
         </div>
       </section>
 
-      <footer className="disclaimer">走你自己的美国出口并复检，不保证不封号。</footer>
+      <footer className="disclaimer">
+        <span>走你自己的美国出口并复检，不保证不封号。非商用。</span>
+        <a
+          className="repo-link"
+          onClick={() => desktopApi?.openExternal?.("https://github.com/hyj-STAR/ai-workspace-doctor")}
+        >github.com/hyj-STAR/ai-workspace-doctor</a>
+      </footer>
     </main>
   );
 }

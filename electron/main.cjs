@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, shell } = require("electron");
 const path = require("node:path");
 
 const isDev = process.env.AI_WORKSPACE_DOCTOR_DEV === "1";
@@ -66,6 +66,10 @@ ipcMain.handle("doctor:apply-proxy", async (_event, options = {}) => {
 ipcMain.handle("doctor:clear-proxy", async () => {
   const api = await scanner();
   return api.clearProxy({ profileDir: profilesDir() });
+});
+
+ipcMain.handle("doctor:open-external", async (_event, url) => {
+  if (typeof url === "string" && /^https:\/\//.test(url)) await shell.openExternal(url);
 });
 
 app.whenReady().then(createWindow);

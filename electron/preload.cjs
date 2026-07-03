@@ -7,5 +7,6 @@ contextBridge.exposeInMainWorld("doctor", {
   previewDeployment: () => ipcRenderer.invoke("doctor:preview-deployment"),
   applyDeployment: () => ipcRenderer.invoke("doctor:apply-deployment"),
   applyProxy: (options) => ipcRenderer.invoke("doctor:apply-proxy", options),
-  clearProxy: () => ipcRenderer.invoke("doctor:clear-proxy")
+  clearProxy: () => ipcRenderer.invoke("doctor:clear-proxy"),
+  openExternal: (url) => ipcRenderer.invoke("doctor:open-external", url)
 });

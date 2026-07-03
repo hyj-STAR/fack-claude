@@ -393,15 +393,20 @@ code {
 /* ---------- Disclaimer ---------- */
 .disclaimer {
   margin-top: 6px;
-  padding: 16px 18px;
+  padding: 14px 18px;
   border: 1px solid var(--line-soft);
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.015);
   color: var(--text-mute);
   font-size: 0.82rem;
-  line-height: 1.7;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
 }
-.disclaimer strong { color: var(--text-dim); }
+.repo-link { color: var(--accent-2); cursor: pointer; font-family: "SFMono-Regular", ui-monospace, Consolas, monospace; }
+.repo-link:hover { text-decoration: underline; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 900px) {
