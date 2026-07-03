@@ -448,8 +448,8 @@ function App() {
         <span>走你自己的美国出口并复检，不保证不封号。非商用。</span>
         <a
           className="repo-link"
-          onClick={() => desktopApi?.openExternal?.("https://github.com/hyj-STAR/ai-workspace-doctor")}
-        >github.com/hyj-STAR/ai-workspace-doctor</a>
+          onClick={() => desktopApi?.openExternal?.("https://github.com/hyj-STAR/fack")}
+        >github.com/hyj-STAR/fack</a>
       </footer>
     </main>
   );

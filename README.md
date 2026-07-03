@@ -6,8 +6,8 @@
 
 ## 下载
 
-- 安装包（macOS）：https://github.com/hyj-STAR/ai-workspace-doctor/releases
-- 源码：https://github.com/hyj-STAR/ai-workspace-doctor
+- 安装包（macOS）：https://github.com/hyj-STAR/fack/releases
+- 源码：https://github.com/hyj-STAR/fack
 
 ## 能做什么
 
