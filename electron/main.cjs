@@ -7,13 +7,17 @@ async function scanner() {
   return import("../src/core/scanner.js");
 }
 
+function profilesDir() {
+  return path.join(app.getPath("userData"), "profiles");
+}
+
 function createWindow() {
   const win = new BrowserWindow({
     width: 1180,
     height: 760,
     minWidth: 900,
     minHeight: 620,
-    title: "AI Workspace Doctor",
+    title: "FACK CLAUDE",
     backgroundColor: "#f5f7f4",
     webPreferences: {
       preload: path.join(__dirname, "preload.cjs"),
@@ -31,27 +35,37 @@ function createWindow() {
 
 ipcMain.handle("doctor:scan", async (_event, options = {}) => {
   const api = await scanner();
-  return api.scanEnvironment(options);
+  return api.scanEnvironment({ ...options, profileDir: profilesDir() });
 });
 
 ipcMain.handle("doctor:preview-fixes", async () => {
   const api = await scanner();
-  return api.previewFixes({ profileDir: path.join(app.getPath("userData"), "profiles") });
+  return api.previewFixes({ profileDir: profilesDir() });
 });
 
 ipcMain.handle("doctor:write-fixes", async () => {
   const api = await scanner();
-  return api.writeFixes({ profileDir: path.join(app.getPath("userData"), "profiles") });
+  return api.writeFixes({ profileDir: profilesDir() });
 });
 
 ipcMain.handle("doctor:preview-deployment", async () => {
   const api = await scanner();
-  return api.previewDeployment({ profileDir: path.join(app.getPath("userData"), "profiles") });
+  return api.previewDeployment({ profileDir: profilesDir() });
 });
 
 ipcMain.handle("doctor:apply-deployment", async () => {
   const api = await scanner();
-  return api.applyDeployment({ profileDir: path.join(app.getPath("userData"), "profiles") });
+  return api.applyDeployment({ profileDir: profilesDir() });
+});
+
+ipcMain.handle("doctor:apply-proxy", async (_event, options = {}) => {
+  const api = await scanner();
+  return api.applyProxy({ ...options, profileDir: profilesDir() });
+});
+
+ipcMain.handle("doctor:clear-proxy", async () => {
+  const api = await scanner();
+  return api.clearProxy({ profileDir: profilesDir() });
 });
 
 app.whenReady().then(createWindow);

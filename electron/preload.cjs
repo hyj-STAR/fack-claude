@@ -5,5 +5,7 @@ contextBridge.exposeInMainWorld("doctor", {
   previewFixes: () => ipcRenderer.invoke("doctor:preview-fixes"),
   writeFixes: () => ipcRenderer.invoke("doctor:write-fixes"),
   previewDeployment: () => ipcRenderer.invoke("doctor:preview-deployment"),
-  applyDeployment: () => ipcRenderer.invoke("doctor:apply-deployment")
+  applyDeployment: () => ipcRenderer.invoke("doctor:apply-deployment"),
+  applyProxy: (options) => ipcRenderer.invoke("doctor:apply-proxy", options),
+  clearProxy: () => ipcRenderer.invoke("doctor:clear-proxy")
 });
