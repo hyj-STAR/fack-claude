@@ -6,8 +6,8 @@
 
 ## 下载
 
-- 安装包（macOS）：https://github.com/hyj-STAR/fack/releases
-- 源码：https://github.com/hyj-STAR/fack
+- 安装包（macOS）：https://github.com/hyj-STAR/fack-claude/releases
+- 源码：https://github.com/hyj-STAR/fack-claude
 
 ## 能做什么
 
